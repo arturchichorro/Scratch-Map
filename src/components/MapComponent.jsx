@@ -1,6 +1,6 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { GoogleMap, LoadScript } from '@react-google-maps/api';
-import CustomMarker from './CustomMarker';
+import CustomMarker from './CustomMarker'; // Import the custom marker component
 
 const mapContainerStyle = {
   width: '100%',
@@ -13,66 +13,42 @@ const center = {
 };
 
 function MapComponent() {
-  const [markers, setMarkers] = useState([]); // State to store marker positions and comments
-  const [title, setTitle] = useState(''); // State to store current title input
-  const [comment, setComment] = useState(''); // State to store current comment body input
-  const [activeMarkerIndex, setActiveMarkerIndex] = useState(null); // Track which marker is being commented on
-  const [isWaitingForComment, setIsWaitingForComment] = useState(false); // Flag to control comment input state
-  const [tempMarker, setTempMarker] = useState(null); // Temporary marker to be discarded if canceled
+  const [markers, setMarkers] = useState([]); // State to store marker positions, titles, and comments
+  const [activeMarker, setActiveMarker] = useState(null); // Track which marker is being added
 
-  // Function to handle clicks on the map
+  // Function to handle clicks on the map to add a marker
   const handleMapClick = useCallback((event) => {
-    if (isWaitingForComment) return; // Prevent placing another marker if waiting for comment
+    if (activeMarker) return; // Prevent adding a new marker if there's already an active one
 
     const newMarker = {
       lat: event.latLng.lat(),
       lng: event.latLng.lng(),
-      title: '', // Initially no title for the new marker
-      comment: '', // Initially no comment for the new marker
+      title: '', // Empty title initially
+      comment: '', // Empty comment initially
     };
 
-    // Add new temporary marker and set it as the active marker for comment input
     setMarkers((prevMarkers) => [...prevMarkers, newMarker]);
-    setTempMarker(newMarker); // Store the temporary marker
-    setActiveMarkerIndex(markers.length);
-    setIsWaitingForComment(true); // Set to waiting state to enforce comment input
-  }, [isWaitingForComment, markers]);
+    setActiveMarker(newMarker); // Set this new marker as the active one for input
+  }, [activeMarker]);
 
-  // Function to handle title change
-  const handleTitleChange = (e) => {
-    setTitle(e.target.value);
+  // Function to handle saving the title and comment
+  const handleSaveNote = (title, comment) => {
+    if (!activeMarker) return;
+
+    setMarkers((prevMarkers) => {
+      return prevMarkers.map((marker) =>
+        marker.lat === activeMarker.lat && marker.lng === activeMarker.lng
+          ? { ...marker, title, comment }
+          : marker
+      );
+    });
+
+    setActiveMarker(null); // Reset the active marker after saving
   };
 
-  // Function to handle comment change
-  const handleCommentChange = (e) => {
-    setComment(e.target.value);
-  };
-
-  // Function to save the comment and title
-  const handleSaveComment = () => {
-    if (activeMarkerIndex !== null) {
-      setMarkers((prevMarkers) => {
-        const updatedMarkers = [...prevMarkers];
-        updatedMarkers[activeMarkerIndex].title = title; // Save the title to the active marker
-        updatedMarkers[activeMarkerIndex].comment = comment; // Save the comment to the active marker
-        return updatedMarkers;
-      });
-      setTitle('');
-      setComment('');
-      setActiveMarkerIndex(null);
-      setTempMarker(null); // Clear the temporary marker
-      setIsWaitingForComment(false); // Exit the waiting state, allow placing new markers
-    }
-  };
-
-  // Function to cancel the comment input
-  const handleCancelComment = () => {
-    setTitle('');
-    setComment('');
-    setActiveMarkerIndex(null);
-    setIsWaitingForComment(false); // Exit the waiting state without placing a comment
-    setMarkers((prevMarkers) => prevMarkers.filter(marker => marker !== tempMarker)); // Remove the temporary marker
-    setTempMarker(null); // Clear the temporary marker state
+  // Function to handle deleting a marker and its note
+  const handleDeleteNote = (marker) => {
+    setMarkers((prevMarkers) => prevMarkers.filter((m) => m !== marker));
   };
 
   useEffect(() => {
@@ -90,34 +66,44 @@ function MapComponent() {
           onClick={handleMapClick} // Register the click event
         >
           {markers.map((marker, index) => (
-            <CustomMarker key={index} position={marker} title={marker.title} comment={marker.comment} />
+            <CustomMarker
+              key={index}
+              position={marker}
+              title={marker.title}
+              comment={marker.comment}
+              onDelete={() => handleDeleteNote(marker)} // Pass delete handler to CustomMarker
+            />
           ))}
         </GoogleMap>
       </LoadScript>
 
-      {/* Comment Input Section */}
-      {isWaitingForComment && (
+      {/* Display note input for title and comment when an active marker is selected */}
+      {activeMarker && (
         <div style={{ marginTop: '20px' }}>
           <input
             type="text"
-            value={title}
-            onChange={handleTitleChange}
-            placeholder="Enter a title"
-            style={{ width: '100%', marginBottom: '10px' }}
+            placeholder="Enter title"
+            value={activeMarker.title}
+            onChange={(e) =>
+              setActiveMarker((prev) => ({ ...prev, title: e.target.value }))
+            }
+            style={{ width: '100%' }}
           />
           <textarea
-            value={comment}
-            onChange={handleCommentChange}
-            placeholder="Add a comment"
+            value={activeMarker.comment}
+            onChange={(e) =>
+              setActiveMarker((prev) => ({ ...prev, comment: e.target.value }))
+            }
+            placeholder="Enter comment"
             rows="3"
-            style={{ width: '100%', marginBottom: '10px' }}
+            style={{ width: '100%' }}
           />
-          <div style={{ marginTop: '10px' }}>
-            <button onClick={handleSaveComment} style={{ marginRight: '10px' }}>
-              Save Comment
-            </button>
-            <button onClick={handleCancelComment}>Cancel</button>
-          </div>
+          <button
+            onClick={() => handleSaveNote(activeMarker.title, activeMarker.comment)}
+            style={{ marginTop: '10px' }}
+          >
+            Save Note
+          </button>
         </div>
       )}
     </div>

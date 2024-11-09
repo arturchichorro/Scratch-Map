@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Marker, InfoWindow } from '@react-google-maps/api';
 
-const CustomMarker = ({ position, title, comment }) => {
+const CustomMarker = ({ position, title, comment, onDelete }) => {
   const [showInfoWindow, setShowInfoWindow] = useState(false); // State to control the InfoWindow visibility
 
   // Toggle InfoWindow visibility on marker click
@@ -50,6 +50,20 @@ const CustomMarker = ({ position, title, comment }) => {
                 Open in Google Maps
               </a>
             )}
+            {/* Delete Button */}
+            <button
+              onClick={onDelete}
+              style={{
+                marginTop: '10px',
+                backgroundColor: 'red',
+                color: 'white',
+                border: 'none',
+                padding: '5px',
+                cursor: 'pointer',
+              }}
+            >
+              Delete
+            </button>
           </div>
         </InfoWindow>
       )}
