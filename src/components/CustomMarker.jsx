@@ -1,42 +1,55 @@
-// src/components/CustomMarker.jsx
 import React, { useState } from 'react';
 import { Marker, InfoWindow } from '@react-google-maps/api';
 
-const CustomMarker = ({ position, comment }) => {
-  const [showInfoWindow, setShowInfoWindow] = useState(false);
+const CustomMarker = ({ position, title, comment }) => {
+  const [showInfoWindow, setShowInfoWindow] = useState(false); // State to control the InfoWindow visibility
 
-  const handleMouseOver = () => {
-    setShowInfoWindow(true);
+  // Toggle InfoWindow visibility on marker click
+  const handleMarkerClick = () => {
+    setShowInfoWindow((prev) => !prev);
   };
 
-  const handleMouseOut = () => {
-    setShowInfoWindow(false);
-  };
+  // Generate Google Maps URL from the position
+  const googleMapsUrl = `https://www.google.com/maps?q=${position.lat},${position.lng}`;
 
   return (
     <div>
       <Marker
-        position={position}
+        position={position} // Google Maps expects the position as lat/lng
         icon={{
           path: google.maps.SymbolPath.CIRCLE,
-          scale: 6,
+          scale: 6, // Size of the circle
           fillColor: 'blue',
           fillOpacity: 1,
           strokeColor: 'white',
           strokeWeight: 2,
         }}
-        onMouseOver={handleMouseOver}
-        onMouseOut={handleMouseOut}
+        onClick={handleMarkerClick} // Toggle InfoWindow on click
       />
-      {showInfoWindow && comment && (
-        <InfoWindow position={position}>
+      {showInfoWindow && (title || comment) && (
+        <InfoWindow position={position} onCloseClick={handleMarkerClick}>
           <div
             style={{
               padding: '10px',
               maxWidth: '200px',
             }}
           >
-            <p>{comment}</p>
+            {title && (
+              <h4 style={{ fontSize: '18px', margin: '0 0 5px 0' }}>{title}</h4> // Title with larger font
+            )}
+            {comment && (
+              <p style={{ fontSize: '14px', margin: '5px 0' }}>{comment}</p> // Comment with smaller font
+            )}
+            {position && (
+              <a
+                href={googleMapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ fontSize: '12px', color: '#007bff', textDecoration: 'none' }} // Google Maps link in smaller font
+              >
+                Open in Google Maps
+              </a>
+            )}
           </div>
         </InfoWindow>
       )}
