@@ -1,20 +1,46 @@
 // src/components/CustomMarker.jsx
-import React from 'react';
-import { Marker } from '@react-google-maps/api';
+import React, { useState } from 'react';
+import { Marker, InfoWindow } from '@react-google-maps/api';
 
-const CustomMarker = ({ position }) => {
+const CustomMarker = ({ position, comment }) => {
+  const [showInfoWindow, setShowInfoWindow] = useState(false);
+
+  const handleMouseOver = () => {
+    setShowInfoWindow(true);
+  };
+
+  const handleMouseOut = () => {
+    setShowInfoWindow(false);
+  };
+
   return (
-    <Marker
-      position={position} // Google Maps expects the position as lat/lng
-      icon={{
-        path: google.maps.SymbolPath.CIRCLE,
-        scale: 6, // Size of the circle
-        fillColor: 'blue',
-        fillOpacity: 1,
-        strokeColor: 'white',
-        strokeWeight: 2,
-      }}
-    />
+    <div>
+      <Marker
+        position={position}
+        icon={{
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 6,
+          fillColor: 'blue',
+          fillOpacity: 1,
+          strokeColor: 'white',
+          strokeWeight: 2,
+        }}
+        onMouseOver={handleMouseOver}
+        onMouseOut={handleMouseOut}
+      />
+      {showInfoWindow && comment && (
+        <InfoWindow position={position}>
+          <div
+            style={{
+              padding: '10px',
+              maxWidth: '200px',
+            }}
+          >
+            <p>{comment}</p>
+          </div>
+        </InfoWindow>
+      )}
+    </div>
   );
 };
 

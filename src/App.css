@@ -1,0 +1,4 @@
+/* Hide the close 'X' button in the InfoWindow */
+.gm-ui-hover-effect {
+    display: none !important;
+  }
