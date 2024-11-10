@@ -1,0 +1,160 @@
+# Language and Framework Specifications
+language_settings:
+  primary_language: javascript
+  frameworks:
+    - react: "^18.3.1"
+    - vite: "^5.4.10"
+  key_libraries:
+    - react-together: "^0.2.0"
+    - "@react-google-maps/api": "^2.20.3"
+    - react-qr-code: "^2.0.15"
+    - react-icons: "^5.3.0"
+  styling:
+    - tailwindcss: "^3.4.14"
+    - autoprefixer: "^10.4.20"
+    - postcss: "^8.4.47"
+
+# Project Structure Rules
+structure_rules:
+  component_location: "src/components/"
+  hooks_location: "src/hooks/"
+  assets_location: "src/assets/"
+  styles_location: "src/"
+  component_types:
+    - presentational: "custom-marker.jsx, generate-qr.jsx"
+    - container: "map-with-controls.jsx"
+    - feature: "map-component.jsx"
+
+# Coding Standards
+coding_standards:
+  react:
+    component_style: "functional"
+    preferred_hooks:
+      - "useState"
+      - "useCallback"
+      - "useEffect"
+      - "useMyStateTogether"
+      - "useMyStateTogetherWithPerUserValues"
+    state_management:
+      collaborative:
+        - "useMyStateTogether for shared arrays/objects"
+        - "useMyStateTogetherWithPerUserValues for per-user state"
+      local:
+        - "useState for UI-specific state"
+        - "useCallback for memoized handlers"
+    props_validation: "PropTypes with specific shapes"
+    
+  naming_conventions:
+    components: "PascalCase (e.g., MapComponent, CustomMarker)"
+    handlers: "handle prefix (e.g., handleMapClick, handleSaveNote)"
+    constants: "UPPERCASE_SNAKE_CASE (e.g., EMPTY_OBJECT)"
+    files: "kebab-case (e.g., map-component.jsx)"
+
+  eslint_rules:
+    extends:
+      - "@eslint/js/recommended"
+      - "plugin:react/recommended"
+      - "plugin:react/jsx-runtime"
+      - "plugin:react-hooks/recommended"
+    special_rules:
+      - "react/jsx-no-target-blank: off"
+      - "react-refresh/only-export-components: [warn, { allowConstantExport: true }]"
+
+# Component Patterns
+component_patterns:
+  structure:
+    - "imports"
+    - "constants/styles"
+    - "component definition"
+    - "state hooks"
+    - "event handlers (useCallback)"
+    - "effects"
+    - "render"
+    - "prop types"
+    - "export"
+  
+  state_management:
+    collaborative:
+      markers:
+        type: "useMyStateTogether"
+        key: "'map'"
+        initial: "[]"
+      location:
+        type: "useMyStateTogetherWithPerUserValues"
+        key: "'userloc'"
+        initial: "EMPTY_OBJECT"
+
+# Styling Guidelines
+styling:
+  framework: "Tailwind CSS"
+  patterns:
+    layout:
+      - "grid grid-cols-1"
+      - "flex justify-center"
+      - "flex justify-around"
+    spacing:
+      - "gap-4"
+      - "p-6"
+      - "px-2"
+    components:
+      - "rounded-lg"
+      - "shadow-md"
+    responsive: "max-w-screen-lg"
+
+# Google Maps Integration
+google_maps:
+  component: "@react-google-maps/api"
+  key_components:
+    - "GoogleMap"
+    - "LoadScript"
+    - "Marker"
+  styling:
+    - "Custom map styles array for visual customization"
+    - "Container style objects for dimensions and appearance"
+  options:
+    - "Disabled default UI elements"
+    - "Custom control configuration"
+    - "Custom marker implementation"
+
+# Performance Guidelines
+performance:
+  optimization_strategies:
+    - "useCallback for event handlers"
+    - "Constants outside component definition"
+    - "Memoized marker rendering"
+    - "Controlled input updates"
+  state_updates:
+    - "Functional updates for markers array"
+    - "Efficient marker filtering and mapping"
+
+# Error Handling
+error_handling:
+  prop_validation:
+    - "Required prop types"
+    - "Shape validation for location objects"
+    - "Array validation for markers"
+  map_interaction:
+    - "Guard clauses in event handlers"
+    - "Null checks for active markers"
+
+# Documentation Requirements
+documentation:
+  components:
+    - "PropTypes for all props"
+    - "Inline comments for complex logic"
+    - "JSDoc for utility functions"
+  state:
+    - "Clear initial state values"
+    - "Documentation for shared state keys"
+
+# Build and Development
+build:
+  tool: "Vite"
+  scripts:
+    dev: "vite"
+    build: "vite build"
+    lint: "eslint ."
+    preview: "vite preview"
+  environment:
+    variables:
+      - "VITE_GOOGLE_API_KEY"

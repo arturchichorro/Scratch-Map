@@ -7,6 +7,8 @@ import AddLocation from './add-location.jsx';
 import LeaveSession from './leave-session.jsx';
 import useMyStateTogether from '../hooks/useMyStateTogether.js';
 import useMyStateTogetherWithPerUserValues from '../hooks/useMyStateTogetherWithPerUserValues.js';
+// import ImportDialog from './ui/import-dialog.jsx';
+// import ExportDialog from './ui/export-dialog.jsx';
 
 const EMPTY_OBJECT = {}
 
@@ -28,7 +30,9 @@ function MapWithControls() {
             </div>
             <div className="flex justify-center gap-6 px-2">
                 <AddLocation location={location} setLocation={setLocation}/>
+                {/* <ImportDialog setMarkers={setMarkers} /> */}
                 <LeaveSession setLocation={setLocation} setMarkers={setMarkers}/>
+                {/* <ExportDialog markers={markers} /> */}
                 <ButtonQR />
             </div>
             {isTogether && (
