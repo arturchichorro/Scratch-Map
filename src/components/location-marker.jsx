@@ -34,7 +34,6 @@ const LocationMarker = ({ position, onDelete }) => {
       <InfoWindow 
         position={position} 
         onCloseClick={handleMarkerClick}
-      
       >
         <div className="max-w-[220px] rounded-lg bg-white shadow-md flex flex-col gap-3">
           
