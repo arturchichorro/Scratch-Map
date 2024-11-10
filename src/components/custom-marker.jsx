@@ -2,16 +2,30 @@ import PropTypes from 'prop-types';
 import {useState} from 'react';
 import { Marker, InfoWindow } from '@react-google-maps/api';
 import { TbBrandGoogleMaps } from "react-icons/tb";
-// import { useConnectedUsers } from 'react-together';
 
 
-const CustomMarker = ({ position, comment, onDelete }) => {
+const CustomMarker = ({ position, comment, userId, onDelete }) => {
   const [showInfoWindow, setShowInfoWindow] = useState(false);
-  // const connectedUsers = useConnectedUsers();
 
   const handleMarkerClick = () => {
     setShowInfoWindow((prev) => !prev);
   };
+
+  const colorPalette = [
+    '#FF5733',
+    '#33FF57',
+    '#3357FF',
+    '#F0E130',
+    '#9B59B6',
+    '#1ABC9C',
+  ];
+
+  const getColorForUserId = (userId) => {
+    const hash = [...userId].reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return colorPalette[hash % colorPalette.length];
+  };
+
+  const markerColor = getColorForUserId(userId);
 
   const googleMapsUrl = `https://www.google.com/maps?q=${position.lat},${position.lng}`;
 
@@ -23,7 +37,7 @@ const CustomMarker = ({ position, comment, onDelete }) => {
           // eslint-disable-next-line no-undef
           path: google.maps.SymbolPath.CIRCLE,
           scale: 6,
-          fillColor: 'blue',
+          fillColor: markerColor,
           fillOpacity: 1,
           strokeColor: 'white',
           strokeWeight: 1,
@@ -75,6 +89,7 @@ CustomMarker.propTypes = {
     lng: PropTypes.number.isRequired,
   }).isRequired,
   comment: PropTypes.string,
+  userId: PropTypes.string,
   onDelete: PropTypes.func.isRequired,
 };
 

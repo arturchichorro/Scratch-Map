@@ -7,12 +7,12 @@ import LocationMarker from './location-marker';
 const mapContainerStyle = {
   width: '600px',
   height: '600px',
-  borderRadius: '15px',  
+  borderRadius: '15px',
   boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
-    overflow: 'hidden',
-  };
+  overflow: 'hidden',
+};
 
-  const EMPTY_OBJECT = {}
+const EMPTY_OBJECT = {};
 
 const center = {
   lat: 38.7169,
@@ -29,21 +29,33 @@ const mapOptions = {
   draggable: true,
   clickableIcons: false,
   styles: [
-    { featureType: "water", elementType: "geometry", stylers: [{ color: "#2b8cbe" }, { visibility: "on" }]},
+    { featureType: "water", elementType: "geometry", stylers: [{ color: "#2b8cbe" }, { visibility: "on" }] },
     { featureType: "landscape", elementType: "geometry", stylers: [{ color: "#a6bddb" }] },
     { featureType: "road", elementType: "geometry", stylers: [{ color: "#ffffff" }] },
     { featureType: "road", elementType: "geometry.stroke", stylers: [{ color: "#FFFFED" }] },
     { featureType: "poi", elementType: "geometry", stylers: [{ color: "#f5f5f5" }] },
     { featureType: "poi.park", elementType: "geometry", stylers: [{ color: "#ece7f2" }] },
     { elementType: "labels", stylers: [{ visibility: "off" }] },
-    { elementType: "labels.text", stylers: [{ visibility: "simplified" } ]},
-    { elementType: "labels.icon", stylers: [{ visibility: "off"}]},
-],
+    { elementType: "labels.text", stylers: [{ visibility: "simplified" }] },
+    { elementType: "labels.icon", stylers: [{ visibility: "off" }] },
+  ],
 };
 
 function MapComponent({ markers, setMarkers, location, setLocation, locationPerUser }) {
   const [activeMarker, setActiveMarker] = useState(null);
   const [inputPosition, setInputPosition] = useState(null);
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    const storedUserId = localStorage.getItem('userId');
+    if (storedUserId) {
+      setUserId(storedUserId);
+    } else {
+      const newUserId = `user-${Date.now()}`;
+      localStorage.setItem('userId', newUserId);
+      setUserId(newUserId);
+    }
+  }, []);
 
   const handleMapClick = useCallback((event) => {
     if (activeMarker) return;
@@ -51,16 +63,17 @@ function MapComponent({ markers, setMarkers, location, setLocation, locationPerU
     const newMarker = {
       lat: event.latLng.lat(),
       lng: event.latLng.lng(),
+      userId: userId,
     };
 
     setMarkers((prevMarkers) => [...prevMarkers, newMarker]);
     setActiveMarker(newMarker);
     setInputPosition({ x: event.pixel.x, y: event.pixel.y });
-  }, [activeMarker, setMarkers]);
+  }, [activeMarker, setMarkers, userId]);
 
   const handleSaveNote = (comment) => {
     if (!activeMarker) return;
-  
+
     setMarkers((prevMarkers) =>
       prevMarkers.map((marker) =>
         marker.lat === activeMarker.lat && marker.lng === activeMarker.lng
@@ -71,7 +84,7 @@ function MapComponent({ markers, setMarkers, location, setLocation, locationPerU
     setActiveMarker(null);
     setInputPosition(null);
   };
-  
+
   const handleDeleteNote = (marker) => {
     setMarkers((prevMarkers) => prevMarkers.filter((m) => m !== marker));
   };
@@ -79,7 +92,6 @@ function MapComponent({ markers, setMarkers, location, setLocation, locationPerU
   const handleDeleteLoc = () => {
     setLocation(EMPTY_OBJECT);
   };
-  
 
   const handleCancel = () => {
     setMarkers((prevMarkers) =>
@@ -93,7 +105,7 @@ function MapComponent({ markers, setMarkers, location, setLocation, locationPerU
     console.log(markers);
   }, [markers]);
 
-  console.log("location: ",location)
+  console.log("location: ", location);
 
   return (
     <div className="relative flex justify-center">
@@ -130,6 +142,7 @@ function MapComponent({ markers, setMarkers, location, setLocation, locationPerU
               key={index}
               position={marker}
               comment={marker.comment}
+              userId={marker.userId}
               onDelete={() => handleDeleteNote(marker)}
             />
           ))}
