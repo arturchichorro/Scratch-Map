@@ -1,6 +1,4 @@
-// import StateTogether from './components/state-together-example'
 import MapComponent from './map-component.jsx';
-// import MapTest from './components/map-test.jsx';
 import ButtonQR from './generate-qr.jsx';
 import { ConnectedUsers, useIsTogether } from 'react-together';
 import AddLocation from './add-location.jsx';
@@ -8,8 +6,7 @@ import LeaveSession from './leave-session.jsx';
 import useMyStateTogether from '../hooks/useMyStateTogether.js';
 import useMyStateTogetherWithPerUserValues from '../hooks/useMyStateTogetherWithPerUserValues.js';
 import Instructions from './instructions.jsx';
-// import ImportDialog from './ui/import-dialog.jsx';
-// import ExportDialog from './ui/export-dialog.jsx';
+import ImportLocation from './import-location';
 
 const EMPTY_OBJECT = {}
 
@@ -17,7 +14,6 @@ function MapWithControls() {
     const [markers, setMarkers] = useMyStateTogether('map', []);
     const [location, setLocation, locationPerUser] = useMyStateTogetherWithPerUserValues('userloc', EMPTY_OBJECT);
     const isTogether = useIsTogether();
-
 
     return (
         <div className="relative grid grid-cols-1 gap-4 justify-center items-center max-w-screen-lg">
@@ -31,6 +27,7 @@ function MapWithControls() {
                 />
             </div>
             <div className="flex justify-center gap-6 items-center">
+                <ImportLocation setMarkers={setMarkers} />
                 <AddLocation location={location} setLocation={setLocation}/>
                 <LeaveSession setLocation={setLocation} setMarkers={setMarkers}/>
                 <ButtonQR />
@@ -45,6 +42,5 @@ function MapWithControls() {
         </div>
     );
 }
-
 
 export default MapWithControls;
