@@ -63,8 +63,7 @@ const GOOGLE_MAPS_URL_PATTERNS = {
   /**
    * Searches for places using text search
    */
-
-const searchPlaces = async (searchParams) => {
+export const searchPlaces = async (searchParams) => {
     try {
       const { Map, PlacesService } = await loadMapsLibraries();
       
