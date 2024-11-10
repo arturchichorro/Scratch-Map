@@ -26,6 +26,7 @@ function MapWithControls() {
                     markers={markers} 
                     setMarkers={setMarkers}
                     location={location}
+                    setLocation={setLocation}
                     locationPerUser={locationPerUser}
                 />
             </div>

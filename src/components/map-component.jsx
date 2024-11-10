@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { GoogleMap, LoadScript } from '@react-google-maps/api';
 import CustomMarker from './custom-marker';
+import LocationMarker from './location-marker';
 
 const mapContainerStyle = {
   width: '600px',
@@ -11,6 +12,7 @@ const mapContainerStyle = {
     overflow: 'hidden',
   };
 
+  const EMPTY_OBJECT = {}
 
 const center = {
   lat: 38.7169,
@@ -39,7 +41,7 @@ const mapOptions = {
 ],
 };
 
-function MapComponent({ markers, setMarkers, location, locationPerUser }) {
+function MapComponent({ markers, setMarkers, location, setLocation, locationPerUser }) {
   const [activeMarker, setActiveMarker] = useState(null);
   const [inputPosition, setInputPosition] = useState(null);
 
@@ -74,6 +76,11 @@ function MapComponent({ markers, setMarkers, location, locationPerUser }) {
     setMarkers((prevMarkers) => prevMarkers.filter((m) => m !== marker));
   };
 
+  const handleDeleteLoc = () => {
+    setLocation(EMPTY_OBJECT);
+  };
+  
+
   const handleCancel = () => {
     setMarkers((prevMarkers) =>
       prevMarkers.filter((marker) => marker.lat !== activeMarker.lat || marker.lng !== activeMarker.lng)
@@ -85,6 +92,8 @@ function MapComponent({ markers, setMarkers, location, locationPerUser }) {
   useEffect(() => {
     console.log(markers);
   }, [markers]);
+
+  console.log("location: ",location)
 
   return (
     <div className="relative flex justify-center">
@@ -99,16 +108,17 @@ function MapComponent({ markers, setMarkers, location, locationPerUser }) {
           className="rounded-lg shadow-lg"
         >
           {location.lat && location.lng && (
-            <Marker
+            <LocationMarker
               key="current-user"
               position={location}
+              onDelete={() => handleDeleteLoc()}
             />
           )}
 
           {Object.keys(locationPerUser).map((userId) => {
             const userLocation = locationPerUser[userId];
             return (
-              <Marker
+              <LocationMarker
                 key={userId}
                 position={userLocation}
               />
@@ -167,6 +177,7 @@ function MapComponent({ markers, setMarkers, location, locationPerUser }) {
 MapComponent.propTypes = {
   markers: PropTypes.array.isRequired,
   setMarkers: PropTypes.func.isRequired,
+  setLocation: PropTypes.func.isRequired,
   location: PropTypes.shape({
     lat: PropTypes.number,
     lng: PropTypes.number,
