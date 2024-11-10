@@ -1,19 +1,19 @@
 import PropTypes from 'prop-types';
-import {useState} from 'react';
-import { Marker, InfoWindow } from '@react-google-maps/api';
-import { TbBrandGoogleMaps } from "react-icons/tb";
+// import {useState} from 'react';
+import { Marker } from '@react-google-maps/api';
+// import { TbBrandGoogleMaps } from "react-icons/tb";
 // import { useConnectedUsers } from 'react-together';
 
 
-const LocationMarker = ({ position, onDelete }) => {
-  const [showInfoWindow, setShowInfoWindow] = useState(false);
-  // const connectedUsers = useConnectedUsers();
+const LocationMarker = ({ position }) => {
+//   const [showInfoWindow, setShowInfoWindow] = useState(false);
+//   // const connectedUsers = useConnectedUsers();
 
-  const handleMarkerClick = () => {
-    setShowInfoWindow((prev) => !prev);
-  };
+//   const handleMarkerClick = () => {
+//     setShowInfoWindow((prev) => !prev);
+//   };
 
-  const googleMapsUrl = `https://www.google.com/maps?q=${position.lat},${position.lng}`;
+//   const googleMapsUrl = `https://www.google.com/maps?q=${position.lat},${position.lng}`;
 
   return (
     <div>
@@ -28,9 +28,9 @@ const LocationMarker = ({ position, onDelete }) => {
           strokeColor: 'white',
           strokeWeight: 2,
         }}
-        onClick={handleMarkerClick}
+        // onClick={handleMarkerClick}
       />
-      {showInfoWindow && (
+      {/* {showInfoWindow && (
       <InfoWindow 
         position={position} 
         onCloseClick={handleMarkerClick}
@@ -58,7 +58,7 @@ const LocationMarker = ({ position, onDelete }) => {
         </div>
       </InfoWindow>
     
-    )}
+    )} */}
     </div>
   );
 };
