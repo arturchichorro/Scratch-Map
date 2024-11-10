@@ -3,8 +3,7 @@ import {useState} from 'react';
 import { Marker, InfoWindow } from '@react-google-maps/api';
 import { TbBrandGoogleMaps } from "react-icons/tb";
 
-
-const CustomMarker = ({ position, comment, userId, onDelete }) => {
+const CustomMarker = ({ position, comment, userId = 'default', onDelete }) => {
   const [showInfoWindow, setShowInfoWindow] = useState(false);
 
   const handleMarkerClick = () => {
@@ -20,8 +19,8 @@ const CustomMarker = ({ position, comment, userId, onDelete }) => {
     '#1ABC9C',
   ];
 
-  const getColorForUserId = (userId) => {
-    const hash = [...userId].reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const getColorForUserId = (id = 'default') => {
+    const hash = String(id).split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
     return colorPalette[hash % colorPalette.length];
   };
 
@@ -48,7 +47,6 @@ const CustomMarker = ({ position, comment, userId, onDelete }) => {
       <InfoWindow 
         position={position} 
         onCloseClick={handleMarkerClick}
-      
       >
         <div className="max-w-[220px] rounded-lg bg-white shadow-md flex flex-col gap-3">
           {comment && (
@@ -77,7 +75,6 @@ const CustomMarker = ({ position, comment, userId, onDelete }) => {
           </div>
         </div>
       </InfoWindow>
-    
     )}
     </div>
   );

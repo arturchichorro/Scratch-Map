@@ -18,10 +18,11 @@ function ImportDialog({ isOpen, onClose, onImport }) {
     try {
       const results = await searchPlaces({
         query: searchQuery,
-        center: { lat: 0, lng: 0 }, // Will use browser's geolocation in full implementation
+        center: { lat: 0, lng: 0 },
         radius: 5000
       });
-      setSearchResults(results.slice(0, 50)); // Limit to 50 results
+      setSearchResults(results.slice(0, 50));
+      setSelectedPlaces(new Set());
     } catch (err) {
       setError('Failed to search places. Please try again.');
       console.error(err);
@@ -31,29 +32,46 @@ function ImportDialog({ isOpen, onClose, onImport }) {
   };
 
   const handleTogglePlace = (place) => {
-    const newSelected = new Set(selectedPlaces);
-    if (newSelected.has(place)) {
-      newSelected.delete(place);
-    } else {
-      newSelected.add(place);
-    }
-    setSelectedPlaces(newSelected);
+    setSelectedPlaces(prev => {
+      const newSelected = new Set(prev);
+      if (Array.from(prev).some(p => p.lat === place.lat && p.lng === place.lng)) {
+        Array.from(prev).forEach(p => {
+          if (p.lat === place.lat && p.lng === place.lng) {
+            newSelected.delete(p);
+          }
+        });
+      } else {
+        newSelected.add(place);
+      }
+      return newSelected;
+    });
   };
 
   const handleImport = () => {
-    const markers = Array.from(selectedPlaces).map(place => ({
-      lat: place.lat,
-      lng: place.lng,
-      comment: place.name
-    }));
-    onImport(markers);
-    onClose();
+    try {
+      const markers = Array.from(selectedPlaces).map(place => ({
+        lat: Number(place.lat),
+        lng: Number(place.lng),
+        comment: place.name || '',
+        userId: 'imported',
+        createdAt: new Date().toISOString()
+      }));
+      
+      onImport(markers);
+      setSearchQuery('');
+      setSearchResults([]);
+      setSelectedPlaces(new Set());
+      onClose();
+    } catch (err) {
+      console.error('Import error:', err);
+      setError('Failed to import selected places. Please try again.');
+    }
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg w-full max-w-md">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-lg font-semibold">Import Places</h2>
@@ -85,12 +103,14 @@ function ImportDialog({ isOpen, onClose, onImport }) {
         <div className="max-h-96 overflow-y-auto p-4">
           {searchResults.map((place) => (
             <label
-              key={`${place.lat}-${place.lng}`}
+              key={`${place.lat}-${place.lng}-${place.name}`}
               className="flex items-start gap-2 p-2 hover:bg-gray-50 cursor-pointer"
             >
               <input
                 type="checkbox"
-                checked={selectedPlaces.has(place)}
+                checked={Array.from(selectedPlaces).some(
+                  p => p.lat === place.lat && p.lng === place.lng
+                )}
                 onChange={() => handleTogglePlace(place)}
                 className="mt-1"
               />
