@@ -18,7 +18,7 @@ function Instructions() {
                 <FaInfo size={12}/>
             </IconButton>
             {showInstructions && (
-                <div className="absolute right-full mr-4 top-[-260px] w-96 p-4 border border-gray-300 rounded bg-gray-100 shadow-lg">
+                <div className="absolute right-[-20px] mr-4 top-[-500px] w-80 p-4 border border-gray-300 rounded bg-gray-100 shadow-lg">
                     <p className="font-semibold">Instructions:</p>
                     <ul className="list-disc list-inside">
                         <li>Navigate: Click and drag to move; use zoom controls to zoom in/out.</li>
