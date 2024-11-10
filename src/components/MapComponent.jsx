@@ -1,3 +1,4 @@
+import { useStateTogether } from 'react-together';
 import React, { useCallback, useState, useEffect } from 'react';
 import { GoogleMap, LoadScript } from '@react-google-maps/api';
 import CustomMarker from './CustomMarker'; // Import the custom marker component
@@ -13,7 +14,7 @@ const center = {
 };
 
 function MapComponent() {
-  const [markers, setMarkers] = useState([]); // State to store marker positions, titles, and comments
+  const [markers, setMarkers] = useStateTogether('', []); // State to store marker positions, titles, and comments
   const [activeMarker, setActiveMarker] = useState(null); // Track which marker is being added
 
   // Function to handle clicks on the map to add a marker
@@ -49,6 +50,14 @@ function MapComponent() {
   // Function to handle deleting a marker and its note
   const handleDeleteNote = (marker) => {
     setMarkers((prevMarkers) => prevMarkers.filter((m) => m !== marker));
+  };
+
+  // Function to handle cancel action
+  const handleCancel = () => {
+    setMarkers((prevMarkers) =>
+      prevMarkers.filter((marker) => marker.lat !== activeMarker.lat || marker.lng !== activeMarker.lng)
+    );
+    setActiveMarker(null); // Reset the active marker on cancel
   };
 
   useEffect(() => {
@@ -98,12 +107,27 @@ function MapComponent() {
             rows="3"
             style={{ width: '100%' }}
           />
-          <button
-            onClick={() => handleSaveNote(activeMarker.title, activeMarker.comment)}
-            style={{ marginTop: '10px' }}
-          >
-            Save Note
-          </button>
+          <div>
+            <button
+              onClick={() => handleSaveNote(activeMarker.title, activeMarker.comment)}
+              style={{ marginTop: '10px', marginRight: '10px' }}
+            >
+              Save Note
+            </button>
+            <button
+              onClick={handleCancel}
+              style={{
+                marginTop: '10px',
+                backgroundColor: 'gray',
+                color: 'white',
+                border: 'none',
+                padding: '5px',
+                cursor: 'pointer',
+              }}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       )}
     </div>
