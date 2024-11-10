@@ -5,7 +5,7 @@ import AddLocation from './add-location.jsx';
 import LeaveSession from './leave-session.jsx';
 import useMyStateTogether from '../hooks/useMyStateTogether.js';
 import useMyStateTogetherWithPerUserValues from '../hooks/useMyStateTogetherWithPerUserValues.js';
-import Instructions from './instructions.jsx';
+// import Instructions from './instructions.jsx';
 import ImportLocation from './import-location';
 
 const EMPTY_OBJECT = {}
@@ -31,7 +31,7 @@ function MapWithControls() {
                 <AddLocation location={location} setLocation={setLocation}/>
                 <LeaveSession setLocation={setLocation} setMarkers={setMarkers}/>
                 <ButtonQR />
-                <Instructions />
+                {/* <Instructions /> */}
             </div>
 
             {isTogether && (

@@ -29,7 +29,6 @@ function Instructions() {
                         <li>Remove Pins: Open the comment and click Delete.</li>
                         <li>Real-Time Updates: All pins and comments update live.</li>
                     </ul>
-
                 </div>
             )}
         </div>
