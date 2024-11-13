@@ -17,7 +17,7 @@ function MapWithControls() {
 
     return (
         <div className="relative grid grid-cols-1 gap-4 justify-center items-center max-w-screen-lg">
-            <div className="p-6 flex flex-col gap-5">
+            <div className="relative p-6 flex flex-col gap-5">
                 <MapComponent 
                     markers={markers} 
                     setMarkers={setMarkers}
@@ -25,13 +25,15 @@ function MapWithControls() {
                     setLocation={setLocation}
                     locationPerUser={locationPerUser}
                 />
-            </div>
-            <div className="flex justify-center gap-6 items-center">
-                <ImportLocation setMarkers={setMarkers} />
-                <AddLocation location={location} setLocation={setLocation}/>
-                <LeaveSession setLocation={setLocation} setMarkers={setMarkers}/>
-                <ButtonQR />
-                {/* <Instructions /> */}
+                <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 flex flex-col justify-center items-center gap-6 pointer-events-none">
+                    <div className="flex gap-6 pointer-events-auto">
+                        <ImportLocation setMarkers={setMarkers} />
+                        <AddLocation location={location} setLocation={setLocation}/>
+                        <LeaveSession setLocation={setLocation} setMarkers={setMarkers}/>
+                        <ButtonQR />
+                        {/* <Instructions /> */}
+                    </div>
+                </div>
             </div>
 
             {isTogether && (
