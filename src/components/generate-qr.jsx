@@ -51,7 +51,7 @@ const SessionButton = () => {
       </IconButton>
 
       {showQRCodeOverlay && (
-        <div className="fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 flex justify-center items-center">
+        <div className="fixed left-0 right-0 bottom-16 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg text-center shadow-lg flex flex-col gap-2">
             <QRCode value={sessionId || ''} />
             {/* <h2 className="text-xl font-semibold text-gray-800 bg-gradient-to-r from-blue-500 to-teal-400 text-transparent bg-clip-text p-2 rounded-md shadow-lg">
