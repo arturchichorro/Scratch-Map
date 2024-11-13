@@ -71,7 +71,7 @@ function ImportDialog({ isOpen, onClose, onImport }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed left-0 right-0 bottom-32 translate-y-1/4 flex items-center justify-center p-4 z-50">
+    <div className="fixed left-0 right-0 bottom-36 translate-y-1/4 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-lg font-semibold">Import Places</h2>
@@ -100,7 +100,7 @@ function ImportDialog({ isOpen, onClose, onImport }) {
           {error && <p className="mt-2 text-red-500 text-sm">{error}</p>}
         </form>
 
-        <div className="max-h-96 overflow-y-auto p-4">
+        <div className="max-h-72 overflow-y-auto p-4">
           {searchResults.map((place) => (
             <label
               key={`${place.lat}-${place.lng}-${place.name}`}
