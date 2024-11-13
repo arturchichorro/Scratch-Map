@@ -71,8 +71,8 @@ function ImportDialog({ isOpen, onClose, onImport }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg w-full max-w-md">
+    <div className="fixed left-0 right-0 bottom-1/2 translate-y-1/4 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-lg">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-lg font-semibold">Import Places</h2>
           <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded">
